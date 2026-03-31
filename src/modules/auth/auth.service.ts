@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/sequelize';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
-import { User } from '../../database/models/user.model';
+import { User, UserRole } from '../../database/models/user.model';
 import { hashPassword, verifyPassword, generateSecureToken } from '../../common/utils/crypto.util';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -26,11 +26,15 @@ export class AuthService {
     }
 
     const password_hash = await hashPassword(dto.password);
+    const role = [UserRole.MANAGER, UserRole.PLAYER].includes(dto.role)
+      ? dto.role
+      : UserRole.PLAYER;
+
     const user = await this.userModel.create({
       name: dto.name,
       email: dto.email,
       password_hash,
-      role: 'viewer',
+      role,
     });
 
     return this.generateTokenPair(user);

@@ -1,7 +1,8 @@
 // src/modules/auth/dto/register.dto.ts
-import { IsEmail, IsString, MinLength, MaxLength, Matches } from 'class-validator';
+import { IsEmail, IsString, MinLength, MaxLength, Matches, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from '../../../database/models/user.model';
 
 export class RegisterDto {
   @ApiProperty({ example: 'Somchai Jaidee', description: 'Full name' })
@@ -34,4 +35,10 @@ export class RegisterDto {
     { message: 'Password must contain uppercase, lowercase, number, and special character' }
   )
   password: string;
+
+  @ApiProperty({ enum: [UserRole.MANAGER, UserRole.PLAYER], example: UserRole.PLAYER })
+  @IsIn([UserRole.MANAGER, UserRole.PLAYER], {
+    message: 'Role must be manager or player',
+  })
+  role: UserRole;
 }
