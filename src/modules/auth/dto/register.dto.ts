@@ -11,13 +11,13 @@ export class RegisterDto {
   @Matches(/^[\u0E00-\u0E7Fa-zA-Z\s'-]+$/, {
     message: 'Name contains invalid characters',
   })
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: any }) => value?.trim())
   name: string;
 
   @ApiProperty({ example: 'user@example.com' })
   @IsEmail({}, { message: 'Invalid email format' })
   @MaxLength(255)
-  @Transform(({ value }) => value?.toLowerCase().trim())
+  @Transform(({ value }: { value: any }) => value?.toLowerCase().trim())
   email: string;
 
   @ApiProperty({

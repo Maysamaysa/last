@@ -13,7 +13,7 @@ import { League } from './league.model';
 })
 export class PlayerStat extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  id: string;
+  declare id: string;
 
   @ForeignKey(() => Player)
   @Column({ type: DataType.UUID, allowNull: false })

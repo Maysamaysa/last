@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/sequelize';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
+import type { Cache } from 'cache-manager';
 import { User } from '../../database/models/user.model';
 import { hashPassword, verifyPassword, generateSecureToken } from '../../common/utils/crypto.util';
 import { RegisterDto } from './dto/register.dto';

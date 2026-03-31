@@ -1,9 +1,9 @@
 // src/config/configuration.ts
 export default () => ({
   NODE_ENV: process.env.NODE_ENV || 'development',
-  PORT: parseInt(process.env.PORT, 10) || 3000,
-  DB_HOST: process.env.DB_HOST,
-  DB_PORT: parseInt(process.env.DB_PORT, 10) || 5432,
+  PORT: parseInt(process.env.PORT || '3000', 10),
+  DB_HOST: process.env.DB_HOST || 'localhost',
+  DB_PORT: parseInt(process.env.DB_PORT || '5432', 10),
   DB_NAME: process.env.DB_NAME,
   DB_USER: process.env.DB_USER,
   DB_PASSWORD: process.env.DB_PASSWORD,
@@ -18,7 +18,7 @@ export default () => ({
   GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
   GITHUB_CALLBACK_URL: process.env.GITHUB_CALLBACK_URL,
   REDIS_HOST: process.env.REDIS_HOST || 'redis',
-  REDIS_PORT: parseInt(process.env.REDIS_PORT, 10) || 6379,
+  REDIS_PORT: parseInt(process.env.REDIS_PORT || '6379', 10),
   REDIS_PASSWORD: process.env.REDIS_PASSWORD,
   CORS_ORIGINS: (process.env.CORS_ORIGINS || 'http://localhost:5173').split(','),
   SWAGGER_ENABLED: process.env.SWAGGER_ENABLED === 'true',

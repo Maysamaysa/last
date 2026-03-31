@@ -23,7 +23,7 @@ export enum EventType {
 })
 export class MatchEvent extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  id: string;
+  declare id: string;
 
   @ForeignKey(() => Match)
   @Column({ type: DataType.UUID, allowNull: false })

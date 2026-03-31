@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Auth')
@@ -31,7 +31,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Login with email/password' })
   @ApiResponse({ status: 200, type: AuthResponseDto })
   async login(@Body() dto: LoginDto, @Req() req: Request) {
-    return this.authService.login(dto, req.ip);
+    return this.authService.login(dto, req.ip || '');
   }
 
   @Post('refresh')
@@ -63,7 +63,7 @@ export class AuthController {
   @SkipThrottle()
   @UseGuards(AuthGuard('google'))
   async googleCallback(@Req() req: any, @Res() res: Response) {
-    const tokens = await this.authService.login(req.user, req.ip);
+    const tokens = await this.authService.login(req.user, req.ip || '');
     res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${tokens.accessToken}`);
   }
 }

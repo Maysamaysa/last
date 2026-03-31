@@ -23,7 +23,7 @@ export enum LeagueStatus {
 })
 export class League extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  id: string;
+  declare id: string;
 
   @Column({ type: DataType.STRING(200), allowNull: false })
   @ApiProperty({ example: 'Bangkok Premier League' })

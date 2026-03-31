@@ -38,7 +38,7 @@ export enum MatchStatus {
 })
 export class Match extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  id: string;
+  declare id: string;
 
   @ForeignKey(() => League)
   @Column({ type: DataType.UUID, allowNull: false })

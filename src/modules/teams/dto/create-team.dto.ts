@@ -8,7 +8,7 @@ export class CreateTeamDto {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: any }) => value?.trim())
   name: string;
 
   @ApiProperty({ example: '323e4567-e89b-12d3-a456-426614174001', description: 'League UUID' })

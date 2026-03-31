@@ -27,7 +27,7 @@ export enum UserRole {
 export class User extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
   @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000' })
-  id: string;
+  declare id: string;
 
   @Column({ type: DataType.STRING(100), allowNull: false })
   @ApiProperty({ example: 'Somchai Jaidee' })

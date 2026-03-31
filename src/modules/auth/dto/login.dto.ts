@@ -7,7 +7,7 @@ export class LoginDto {
   @ApiProperty({ example: 'user@example.com' })
   @IsEmail({}, { message: 'Invalid email format' })
   @MaxLength(255)
-  @Transform(({ value }) => value?.toLowerCase().trim())
+  @Transform(({ value }: { value: any }) => value?.toLowerCase().trim())
   email: string;
 
   @ApiProperty({ example: 'MyP@ssw0rd!2025' })

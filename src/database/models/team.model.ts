@@ -16,7 +16,7 @@ import { Match } from './match.model';
 })
 export class Team extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  id: string;
+  declare id: string;
 
   @Column({ type: DataType.STRING(100), allowNull: false })
   @ApiProperty({ example: 'Bangkok FC' })

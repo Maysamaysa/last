@@ -5,7 +5,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
 import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import * as redisStore from 'cache-manager-ioredis';
 import Joi from 'joi';
 

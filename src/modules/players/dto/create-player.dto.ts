@@ -9,7 +9,7 @@ export class CreatePlayerDto {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: any }) => value?.trim())
   name: string;
 
   @ApiProperty({ example: 9, description: 'Jersey number' })

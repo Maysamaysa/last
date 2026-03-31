@@ -9,7 +9,6 @@ export const hashPassword = async (password: string): Promise<string> => {
     timeCost: 3,
     parallelism: 4,
     hashLength: 32,
-    saltLength: 16,
   });
 };
 

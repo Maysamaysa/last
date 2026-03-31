@@ -54,7 +54,7 @@ async function bootstrap() {
   // ===== SECURITY: CORS =====
   app.enableCors({
     origin: (origin: string, callback: (err: Error | null, allow?: boolean) => void) => {
-      const allowedOrigins = config.get<string[]>('CORS_ORIGINS');
+      const allowedOrigins = config.get<string[]>('CORS_ORIGINS') || [];
       if (isDev || !origin) {
         return callback(null, true);
       }

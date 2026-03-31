@@ -12,7 +12,7 @@ export class UpdateUserDto {
   @Matches(/^[\u0E00-\u0E7Fa-zA-Z\s'-]+$/, {
     message: 'Name contains invalid characters',
   })
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: any }) => value?.trim())
   name?: string;
 
   @ApiPropertyOptional({ example: 'Loves football and managing teams.', description: 'Brief bio' })

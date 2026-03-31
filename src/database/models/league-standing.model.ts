@@ -9,12 +9,12 @@ import { Team } from './team.model';
   indexes: [
     { fields: ['league_id'] },
     { fields: ['team_id'] },
-    { fields: ['points', 'goal_difference'], order: ['DESC', 'DESC'] },
+    { fields: ['points', 'goal_difference'] },
   ],
 })
 export class LeagueStanding extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  id: string;
+  declare id: string;
 
   @ForeignKey(() => League)
   @Column({ type: DataType.UUID, allowNull: false })

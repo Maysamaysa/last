@@ -12,7 +12,7 @@ import { User } from './user.model';
 })
 export class OauthAccount extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  id: string;
+  declare id: string;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false })
