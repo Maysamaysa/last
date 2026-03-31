@@ -5,12 +5,18 @@ import { Team } from '../../database/models/team.model';
 import { User, UserRole } from '../../database/models/user.model';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { getPaginationOptions, buildPaginatedResponse } from '../../common/utils/pagination.util';
+import { CreateTeamDto } from './dto/create-team.dto';
+import { UpdateTeamDto } from './dto/update-team.dto';
 
 @Injectable()
 export class TeamsService {
   constructor(
     @InjectModel(Team) private teamModel: typeof Team,
   ) {}
+
+  async create(dto: CreateTeamDto) {
+    return this.teamModel.create(dto as any);
+  }
 
   async findAll(dto: PaginationDto, leagueId?: string) {
     const where = leagueId ? { league_id: leagueId } : {};
@@ -45,5 +51,16 @@ export class TeamsService {
     const team = await this.findOne(teamId);
     await team.update({ logo_url: logoUrl });
     return { logo_url: logoUrl };
+  }
+
+  async update(id: string, dto: UpdateTeamDto) {
+    const team = await this.findOne(id);
+    return team.update(dto);
+  }
+
+  async remove(id: string) {
+    const team = await this.findOne(id);
+    await team.destroy();
+    return { success: true };
   }
 }

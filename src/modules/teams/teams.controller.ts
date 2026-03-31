@@ -6,6 +6,8 @@ import { memoryStorage } from 'multer';
 import { fromBuffer } from 'file-type';
 import { randomUUID } from 'crypto';
 import { TeamsService } from './teams.service';
+import { CreateTeamDto } from './dto/create-team.dto';
+import { UpdateTeamDto } from './dto/update-team.dto';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -23,6 +25,14 @@ export class TeamsController {
   @ApiQuery({ name: 'leagueId', required: false, type: String })
   findAll(@Query() paginationDto: PaginationDto, @Query('leagueId') leagueId?: string) {
     return this.teamsService.findAll(paginationDto, leagueId);
+  }
+
+  @Post()
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Create new team', description: 'Admin only' })
+  create(@Body() dto: CreateTeamDto) {
+    return this.teamsService.create(dto);
   }
 
   @Get(':id')
@@ -72,5 +82,26 @@ export class TeamsController {
     await this.teamsService.checkOwnership(id, user);
 
     return this.teamsService.uploadLogo(id, file.buffer, safeFilename);
+  }
+
+  @Patch(':id')
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Update team details' })
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateTeamDto,
+    @CurrentUser() user: any,
+  ) {
+    await this.teamsService.checkOwnership(id, user);
+    return this.teamsService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Delete team' })
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.teamsService.remove(id);
   }
 }

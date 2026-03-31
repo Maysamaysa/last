@@ -1,11 +1,12 @@
-// src/modules/me/me.service.ts
+// src/modules/user/user.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../../database/models/user.model';
 import { Team } from '../../database/models/team.model';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
-export class MeService {
+export class UserService {
   constructor(
     @InjectModel(User) private userModel: typeof User,
   ) {}
@@ -19,5 +20,11 @@ export class MeService {
     });
     if (!user) throw new NotFoundException('User not found');
     return user;
+  }
+
+  async updateProfile(userId: string, dto: UpdateUserDto) {
+    const user = await this.userModel.findByPk(userId);
+    if (!user) throw new NotFoundException('User not found');
+    return user.update(dto);
   }
 }

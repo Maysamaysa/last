@@ -137,7 +137,7 @@ async function bootstrap() {
       .addTag('Teams', 'Team management')
       .addTag('Players', 'Player management')
       .addTag('Matches', 'Match scheduling & results')
-      .addTag('Me', 'Current user profile')
+      .addTag('User', 'Current user profile')
       .addTag('Health', 'Health check')
       .build();
 

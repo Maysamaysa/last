@@ -31,7 +31,7 @@ import { LeaguesModule } from './modules/leagues/leagues.module';
 import { TeamsModule } from './modules/teams/teams.module';
 import { PlayersModule } from './modules/players/players.module';
 import { MatchesModule } from './modules/matches/matches.module';
-import { MeModule } from './modules/me/me.module';
+import { UserModule } from './modules/user/user.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
@@ -130,7 +130,7 @@ import { HealthModule } from './health/health.module';
     TeamsModule,
     PlayersModule,
     MatchesModule,
-    MeModule,
+    UserModule,
     HealthModule,
   ],
   providers: [
