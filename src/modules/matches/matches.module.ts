@@ -6,11 +6,14 @@ import { MatchesService } from './matches.service';
 import { MatchesController } from './matches.controller';
 import { Match } from '../../database/models/match.model';
 import { Team } from '../../database/models/team.model';
+import { PlayerStat } from '../../database/models/player-stat.model';
+import { MatchEvent } from '../../database/models/match-event.model';
+import { LeagueStanding } from '../../database/models/league-standing.model';
 import Redis from 'ioredis';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Match, Team]),
+    SequelizeModule.forFeature([Match, Team, MatchEvent, PlayerStat, LeagueStanding]),
     ConfigModule,
   ],
   controllers: [MatchesController],

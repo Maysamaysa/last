@@ -3,6 +3,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { League, LeagueStatus } from '../../database/models/league.model';
 import { User } from '../../database/models/user.model';
+import { Team } from '../../database/models/team.model';
+import { Player } from '../../database/models/player.model';
+import { PlayerStat } from '../../database/models/player-stat.model';
+import { LeagueStanding } from '../../database/models/league-standing.model';
 import { CreateLeagueDto } from './dto/create-league.dto';
 import { UpdateLeagueDto } from './dto/update-league.dto';
 import { PaginationDto } from '../../common/dto/pagination.dto';
@@ -12,6 +16,8 @@ import { getPaginationOptions, buildPaginatedResponse } from '../../common/utils
 export class LeaguesService {
   constructor(
     @InjectModel(League) private leagueModel: typeof League,
+    @InjectModel(LeagueStanding) private standingModel: typeof LeagueStanding,
+    @InjectModel(PlayerStat) private playerStatModel: typeof PlayerStat,
   ) {}
 
   async create(dto: CreateLeagueDto, userId: string) {
@@ -49,5 +55,38 @@ export class LeaguesService {
     const league = await this.findOne(id);
     await league.destroy();
     return { success: true };
+  }
+
+  async getStandings(leagueId: string) {
+    await this.findOne(leagueId); // verify league exists
+    return this.standingModel.findAll({
+      where: { league_id: leagueId },
+      include: [{ model: Team, as: 'team', attributes: ['name', 'logo_url'] }],
+      order: [
+        ['points', 'DESC'],
+        ['goal_difference', 'DESC'],
+        ['goals_for', 'DESC'],
+      ],
+    });
+  }
+
+  async getTopScorers(leagueId: string) {
+    await this.findOne(leagueId); // verify league exists
+    return this.playerStatModel.findAll({
+      where: { league_id: leagueId },
+      include: [
+        { 
+          model: Player, 
+          as: 'player', 
+          attributes: ['name'],
+          include: [{ model: Team, as: 'team', attributes: ['name'] }]
+        }
+      ],
+      order: [
+        ['goals', 'DESC'],
+        ['assists', 'DESC'],
+      ],
+      limit: 20,
+    });
   }
 }

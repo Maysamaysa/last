@@ -56,4 +56,20 @@ export class LeaguesController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.leaguesService.remove(id);
   }
+
+  @Get(':id/standings')
+  @Public()
+  @ApiOperation({ summary: 'Get league table / standings' })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  getStandings(@Param('id', ParseUUIDPipe) id: string) {
+    return this.leaguesService.getStandings(id);
+  }
+
+  @Get(':id/top-scorers')
+  @Public()
+  @ApiOperation({ summary: 'Get league top scorers' })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  getTopScorers(@Param('id', ParseUUIDPipe) id: string) {
+    return this.leaguesService.getTopScorers(id);
+  }
 }
