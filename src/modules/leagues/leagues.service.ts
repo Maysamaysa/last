@@ -15,9 +15,9 @@ import { getPaginationOptions, buildPaginatedResponse } from '../../common/utils
 @Injectable()
 export class LeaguesService {
   constructor(
-    @InjectModel(League) private leagueModel: typeof League,
-    @InjectModel(LeagueStanding) private standingModel: typeof LeagueStanding,
-    @InjectModel(PlayerStat) private playerStatModel: typeof PlayerStat,
+    @InjectModel(League) private readonly leagueModel: typeof League,
+    @InjectModel(LeagueStanding) private readonly standingModel: typeof LeagueStanding,
+    @InjectModel(PlayerStat) private readonly playerStatModel: typeof PlayerStat,
   ) {}
 
   async create(dto: CreateLeagueDto, userId: string) {

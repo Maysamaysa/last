@@ -13,10 +13,10 @@ import { LoginDto } from './dto/login.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User) private userModel: typeof User,
-    private jwtService: JwtService,
-    private configService: ConfigService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @InjectModel(User) private readonly userModel: typeof User,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async register(dto: RegisterDto) {

@@ -13,7 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 @ApiTags('Auth')
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @Public()
@@ -56,7 +56,11 @@ export class AuthController {
   @Public()
   @SkipThrottle()
   @UseGuards(AuthGuard('google'))
-  googleAuth() {}
+  googleAuth() {
+    // Passport Google OAuth redirect is handled by the guard,
+    // so this handler only exists as the route entrypoint.
+    return;
+  }
 
   @Get('google/callback')
   @Public()

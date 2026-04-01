@@ -18,10 +18,10 @@ import { getPaginationOptions, buildPaginatedResponse } from '../../common/utils
 @Injectable()
 export class MatchesService {
   constructor(
-    @InjectModel(Match) private matchModel: typeof Match,
-    @InjectModel(MatchEvent) private eventModel: typeof MatchEvent,
-    @InjectModel(PlayerStat) private playerStatModel: typeof PlayerStat,
-    @InjectModel(LeagueStanding) private standingModel: typeof LeagueStanding,
+    @InjectModel(Match) private readonly matchModel: typeof Match,
+    @InjectModel(MatchEvent) private readonly eventModel: typeof MatchEvent,
+    @InjectModel(PlayerStat) private readonly playerStatModel: typeof PlayerStat,
+    @InjectModel(LeagueStanding) private readonly standingModel: typeof LeagueStanding,
     @Inject('REDIS_CLIENT') private readonly redis: Redis,
   ) {}
 
@@ -89,40 +89,52 @@ export class MatchesService {
       match_id: matchId,
     } as any);
 
-    // If goal, update score
-    if (dto.type === EventType.GOAL || dto.type === EventType.OWN_GOAL) {
-      if (dto.type === EventType.GOAL) {
-        if (dto.team_id === match.home_team_id) {
-          await match.increment('home_score');
-        } else if (dto.team_id === match.away_team_id) {
-          await match.increment('away_score');
-        }
-      } else { // OWN_GOAL
-        if (dto.team_id === match.home_team_id) {
-          await match.increment('away_score');
-        } else {
-          await match.increment('home_score');
-        }
-      }
-      
-      // Re-fetch match to get updated scores for publishing
+    if (this.isScoreEvent(dto.type)) {
+      await this.applyScoreEvent(match, dto);
       await match.reload();
-      await this.redis.publish(`match:${matchId}`, JSON.stringify({
-        type: 'goal',
-        event,
-        match: {
-          home_score: match.home_score,
-          away_score: match.away_score,
-        },
-      }));
+      await this.publishGoalEvent(matchId, event, match.home_score, match.away_score);
     }
 
-    // Update player statistics if applicable
-    if (dto.player_id && [EventType.GOAL, EventType.ASSIST, EventType.YELLOW_CARD, EventType.RED_CARD].includes(dto.type)) {
+    if (dto.player_id && this.isPlayerStatEvent(dto.type)) {
       await this.updatePlayerStats(match.league_id, dto.player_id, dto.type);
     }
 
     return event;
+  }
+
+  private isScoreEvent(type: EventType): boolean {
+    return [EventType.GOAL, EventType.OWN_GOAL].includes(type);
+  }
+
+  private isPlayerStatEvent(type: EventType): boolean {
+    return [EventType.GOAL, EventType.ASSIST, EventType.YELLOW_CARD, EventType.RED_CARD].includes(type);
+  }
+
+  private async applyScoreEvent(match: Match, dto: MatchEventDto) {
+    const scoreField = this.getScoreField(dto, match);
+    if (!scoreField) return;
+    await match.increment(scoreField);
+  }
+
+  private getScoreField(dto: MatchEventDto, match: Match): 'home_score' | 'away_score' | null {
+    if (dto.type === EventType.GOAL) {
+      return dto.team_id === match.home_team_id ? 'home_score' : 'away_score';
+    }
+    if (dto.type === EventType.OWN_GOAL) {
+      return dto.team_id === match.home_team_id ? 'away_score' : 'home_score';
+    }
+    return null;
+  }
+
+  private async publishGoalEvent(matchId: string, event: any, home_score: number, away_score: number) {
+    await this.redis.publish(`match:${matchId}`, JSON.stringify({
+      type: 'goal',
+      event,
+      match: {
+        home_score,
+        away_score,
+      },
+    }));
   }
 
   private async updatePlayerStats(leagueId: string, playerId: string, type: EventType) {

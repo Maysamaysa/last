@@ -1,6 +1,6 @@
 // src/common/utils/crypto.util.ts
 import argon2 from 'argon2';
-import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
+import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
 
 export const hashPassword = async (password: string): Promise<string> => {
   return argon2.hash(password, {

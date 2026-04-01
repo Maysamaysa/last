@@ -1,6 +1,6 @@
 // src/common/utils/ssrf.util.ts
-import { promises as dns } from 'dns';
-import { isIP } from 'net';
+import { promises as dns } from 'node:dns';
+import { isIP } from 'node:net';
 import { BadRequestException } from '@nestjs/common';
 
 const PRIVATE_IP_PATTERNS = [
@@ -14,10 +14,10 @@ const PRIVATE_IP_PATTERNS = [
   /^fe80:/i,
 ];
 
-const BLOCKED_HOSTS = [
+const BLOCKED_HOSTS = new Set([
   'localhost', 'metadata.google.internal',
   '169.254.169.254', 'metadata.internal',
-];
+]);
 
 export async function validateExternalUrl(urlString: string): Promise<URL> {
   let url: URL;
@@ -33,7 +33,7 @@ export async function validateExternalUrl(urlString: string): Promise<URL> {
 
   const hostname = url.hostname.toLowerCase();
 
-  if (BLOCKED_HOSTS.includes(hostname)) {
+  if (BLOCKED_HOSTS.has(hostname)) {
     throw new BadRequestException('Access to this host is not allowed');
   }
 

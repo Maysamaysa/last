@@ -11,7 +11,7 @@ import { UpdateTeamDto } from './dto/update-team.dto';
 @Injectable()
 export class TeamsService {
   constructor(
-    @InjectModel(Team) private teamModel: typeof Team,
+    @InjectModel(Team) private readonly teamModel: typeof Team,
   ) {}
 
   async create(dto: CreateTeamDto) {

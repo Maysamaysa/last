@@ -8,7 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User) private userModel: typeof User,
+    @InjectModel(User) private readonly userModel: typeof User,
   ) {}
 
   async getProfile(userId: string) {

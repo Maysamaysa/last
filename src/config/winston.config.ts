@@ -18,9 +18,12 @@ export const winstonConfig: WinstonModuleOptions = {
           const sanitize = (obj: any): any => {
             if (typeof obj !== 'object' || !obj) return obj;
             return Object.keys(obj).reduce((acc, key) => {
+              const rawValue = obj[key];
+              const sanitizedValue =
+                typeof rawValue === 'object' ? sanitize(rawValue) : rawValue;
               acc[key] = sensitiveKeys.some(k => key.toLowerCase().includes(k))
                 ? '[REDACTED]'
-                : (typeof obj[key] === 'object' ? sanitize(obj[key]) : obj[key]);
+                : sanitizedValue;
               return acc;
             }, {} as any);
           };

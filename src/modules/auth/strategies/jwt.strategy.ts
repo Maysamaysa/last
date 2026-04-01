@@ -9,8 +9,8 @@ import { User } from '../../../database/models/user.model';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private configService: ConfigService,
-    @InjectModel(User) private userModel: typeof User,
+    private readonly configService: ConfigService,
+    @InjectModel(User) private readonly userModel: typeof User,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     const user = await this.userModel.findByPk(payload.sub);
-    if (!user || !user.is_active) {
+    if (!user?.is_active) {
       throw new UnauthorizedException();
     }
     return { sub: user.id, email: user.email, role: user.role };
